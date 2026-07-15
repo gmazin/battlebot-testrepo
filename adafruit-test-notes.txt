@@ -1,0 +1,9 @@
+A few notes before you flash it:
+
+Install libraries: Arduino IDE → Manage Libraries → search "Adafruit LIS331" and install it — this pulls in Adafruit BusIO and Adafruit Unified Sensor as dependencies automatically (accept the prompt if asked).
+Wiring is actually simpler than the original OpenMelt2 Arduino build here: the H3LIS331 is a 3.3V part, and the RP2040 is natively 3.3V logic — so unlike the 5V Arduino Micro reference design, you don't need a level shifter between the Pico and the sensor.
+I2C pins: I set them explicitly with Wire.setSDA()/Wire.setSCL() (GP4/GP5) rather than relying on the core's default, so there's no ambiguity — change those two constants if you wire it elsewhere.
+Range: defaults to ±100G, since that gives better resolution for a bench test where you're just checking that gravity reads correctly (~9.8 m/s² on whichever axis is vertical). Bump it to H3LIS331_RANGE_400_G once this is actually mounted on something that spins fast.
+Sanity check: sitting still on a desk, you should see one axis hover near ±9.8 m/s² and the other two near 0 — that confirms wiring, I2C address, and orientation are all correct before you trust it during a real spin-up test.
+
+If it doesn't show up on the I2C bus, the usual culprits are wrong SDA/SCL pins, wrong address (0x18 vs 0x19 depending on the SDO jumper), or missing pull-ups (most breakout boards include them, but worth checking if you're using a bare chip).
