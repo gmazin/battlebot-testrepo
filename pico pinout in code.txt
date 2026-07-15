@@ -1,0 +1,35 @@
+On the Pico, the arduino-pico core uses **GPIO numbers directly** as the pin argument in code — not the sequential 1–40 numbering you see in generic pinout diagrams. Concretely: whatever number follows "GP" on the board's silkscreen is exactly the number you use in code. `GP2` → `pinMode(2, ...)`, `digitalWrite(2, ...)`, or in your DShot sketch, `BidirDShotX1(2, 600)`.
+
+So for your sketch: `MOTOR1_PIN = 2` is GP2, and `MOTOR2_PIN = 3` is GP3.
+
+If you're instead looking at a pinout diagram that numbers the 40 physical pin positions (1–40 going around the board, common on sites like pico.pinout.xyz or the datasheet), here's how that maps to the GPIO/code numbers:
+
+| Physical pin | GPIO (code #) | | Physical pin | GPIO (code #) |
+|---|---|---|---|---|
+| 1 | GP0 | | 21 | GP16 |
+| 2 | GP1 | | 22 | GP17 |
+| 3 | GND | | 23 | GND |
+| 4 | GP2 | | 24 | GP18 |
+| 5 | GP3 | | 25 | GP19 |
+| 6 | GP4 | | 26 | GP20 |
+| 7 | GP5 | | 27 | GP21 |
+| 8 | GND | | 28 | GND |
+| 9 | GP6 | | 29 | GP22 |
+| 10 | GP7 | | 30 | RUN (reset, not GPIO) |
+| 11 | GP8 | | 31 | GP26 / ADC0 |
+| 12 | GP9 | | 32 | GP27 / ADC1 |
+| 13 | GND | | 33 | GND (AGND) |
+| 14 | GP10 | | 34 | GP28 / ADC2 |
+| 15 | GP11 | | 35 | ADC_VREF |
+| 16 | GP12 | | 36 | 3V3(OUT) |
+| 17 | GP13 | | 37 | 3V3_EN |
+| 18 | GND | | 38 | GND |
+| 19 | GP14 | | 39 | VSYS |
+| 20 | GP15 | | 40 | VBUS |
+
+A few things worth knowing:
+- **GP23, GP24, GP25 aren't broken out to header pins at all** on the original Pico. GP25 drives the onboard LED, GP23 controls the SMPS power-save mode, GP24 senses VBUS — none are usable for your own signals.
+- Any GPIO can be used with `pico-bidir-dshot`, since it runs on the PIO hardware rather than fixed peripheral pins — so you're not restricted to specific "PWM pins" like you would be on an AVR Arduino.
+- If you're on a **Pico W**, GP23–25 are repurposed for the wireless chip's SPI interface and aren't available the same way, but the rest of the table above still holds.
+
+So if you decide to move your motor signal wires to, say, physical pins 9 and 10 instead, that'd be `GP6` and `GP7` → `MOTOR1_PIN = 6` and `MOTOR2_PIN = 7` in the sketch.
