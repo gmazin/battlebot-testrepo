@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "BALCORN") (type "KiCad") (uri "${KIPRJMOD}/BALCORN.pretty") (options "") (descr ""))
+)

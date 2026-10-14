@@ -1,0 +1,5 @@
+(version 1)
+
+(rule "Ignore Switch Hole Clearance"
+    (severity ignore)
+    (condition "A.memberOfFootprint('BALCORN:10-32_PEM_SWITCH')"))
